@@ -17,21 +17,32 @@
             android:background="@drawable/circles_ripple"
             android:scaleType="center" />
 
-        <View
-            android:id="@+id/white_block"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="@android:color/white"
-            app:layout_constraintBottom_toBottomOf="@id/anim_one" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Please tap your card to mobile after authentication"
-            android:textSize="20sp"
-            app:layout_constraintTop_toTopOf="@id/white_block" />
     </android.support.constraint.ConstraintLayout>
+
+    <View
+        android:id="@+id/white_block"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="200dp"
+        android:background="@android:color/white" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="200dp"
+        android:layout_marginBottom="-300dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/background_wall"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Please tap your card to mobile after authentication"
+        android:layout_marginTop="200dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="20sp"/>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/flow_2"
@@ -51,7 +62,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Your card is wallet is added successfully"
+            android:textSize="20sp"
+            android:text="Your card authentication is successful. \nWallet is added successfully"
             app:layout_constraintTop_toBottomOf="@+id/tick_image" />
 
         <Button
@@ -65,14 +77,5 @@
             app:layout_constraintStart_toStartOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="200dp"
-        android:layout_marginBottom="-300dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:background="@drawable/background_wall"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
