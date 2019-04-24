@@ -24,11 +24,10 @@
 package com.gemalto.tokenlibrary.restful;
 
 import com.gemalto.tokenlibrary.pojo.GenerateAddress;
+import com.gemalto.tokenlibrary.pojo.GetAccountInfo;
 
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.POST;
 
 public interface APIInterface {
     /**
@@ -38,6 +37,6 @@ public interface APIInterface {
     @GET("/generateAddress")
     Call<GenerateAddress> generateAddress();
 
-    //@GET("/generateAddress")
-    //Call<GenerateAddress> generateAddress();
+    @GET("/getAccountInfo")
+    Call<GetAccountInfo> getAccountInfo();
 }

@@ -27,7 +27,6 @@ public class WalletSetupActivity extends AppCompatActivity {
     TextView tvPassPhrase;
 
     private static final String TAG = WalletSetupActivity.class.getSimpleName();
-    private static final String SERVER_URL = "http://172.16.14.197:8080/";
 
 
     @Override
@@ -77,9 +76,16 @@ public class WalletSetupActivity extends AppCompatActivity {
     }
 
     private void generate_address() {
-        String token_server_url = SERVER_URL;
+        String server_url = null;
+        try {
+            ApplicationInfo appInfo = getApplicationContext().getPackageManager().getApplicationInfo(getApplicationContext().getPackageName(), PackageManager.GET_META_DATA);
+            server_url = appInfo.metaData.get("SERVER_URL").toString();
+        } catch(PackageManager.NameNotFoundException e){
+            Log.e(TAG, "SERVER_URL NOT found!");
+            return;
+        }
 
-        APIInterface apiInterface = APIClient.getClient(token_server_url).create(APIInterface.class);
+        APIInterface apiInterface = APIClient.getClient(server_url).create(APIInterface.class);
         //Call REST API to request token to server
         Call<GenerateAddress> call = apiInterface.generateAddress();
         call.enqueue(new Callback<GenerateAddress>() {
