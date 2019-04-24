@@ -23,7 +23,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class WalletSetupActivity extends AppCompatActivity {
-    EditText editText;
     TextView tvPassPhrase;
 
     private static final String TAG = WalletSetupActivity.class.getSimpleName();
@@ -33,7 +32,6 @@ public class WalletSetupActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet_setup);
-        editText = findViewById(R.id.enter_pin);
         tvPassPhrase = findViewById(R.id.pass_phrase);
         findViewById(R.id.regenerate).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,28 +48,6 @@ public class WalletSetupActivity extends AppCompatActivity {
             }
         });
 
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (((s.length() - temp) % 4) == 0) {
-                    editText.setText(editText.getText().toString() + " ");
-                    int position = editText.getText().toString().length();
-                    Editable etext = editText.getText();
-                    Selection.setSelection(etext, position);
-                    temp++;
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
         generate_address();
     }
 
@@ -106,6 +82,4 @@ public class WalletSetupActivity extends AppCompatActivity {
             }
         });
     }
-
-    int temp = 0;
 }

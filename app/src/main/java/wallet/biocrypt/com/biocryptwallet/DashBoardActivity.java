@@ -145,22 +145,7 @@ public class DashBoardActivity extends AppCompatActivity {
         }
     }
     
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startActivityForResult(new Intent(DashBoardActivity.this, SimpleScannerActivity.class)
-                            , 100);
-                } else {
-                    Toast.makeText(DashBoardActivity.this, "Permission denied to camera", Toast.LENGTH_SHORT).show();
-                }
-                return;
-            }
-        }
-    }
-	
+
 	@Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -191,7 +176,7 @@ public class DashBoardActivity extends AppCompatActivity {
                 if (response.body() != null) {
                     Log.i(TAG, "response:" + response.body());
                     //tvPassPhrase.setText(response.body().getKeytoenglish());
-                    String xrpbalance = response.body().getXrpbalance();
+                    String xrpbalance = response.body().getXrpBalance();
                     String publicaddress = response.body().getPublicaddress();
                     Log.i(TAG, "publicaddress:" + publicaddress + "xrpbalance:" + xrpbalance);
                 } else {
