@@ -38,6 +38,7 @@ public class DashBoardActivity extends AppCompatActivity {
     private ImageView scanQR;
     private EditText addressTv;
     private TextView amount;
+    Thread backgroundThread;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,6 +102,8 @@ public class DashBoardActivity extends AppCompatActivity {
             }
         });
         getAccountInfo();
+        subscribeTransaction();
+
     }
 
     View.OnClickListener clickListener = new View.OnClickListener() {
@@ -235,6 +238,20 @@ public class DashBoardActivity extends AppCompatActivity {
         });
     }
 
+    private void subscribeForNotification() {
+        backgroundThread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    subscribeTransaction();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        backgroundThread.start();
+    }
     private void subscribeTransaction() {
         String server_url = null;
         try {
@@ -253,7 +270,7 @@ public class DashBoardActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Subscribe> call, Response<Subscribe> response) {
                 if (response.body() != null) {
-                    Log.i(TAG, "response:" + response.body());
+                    Log.i(TAG, "Subscribe result:" + response.body());
                     //tvPassPhrase.setText(response.body().getKeytoenglish());
                     double xrpReceived = response.body().getXrp();
                     Log.i(TAG, "xrpReceived:" + String.valueOf(xrpReceived));
