@@ -29,20 +29,20 @@
             android:id="@+id/coin_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/qr_icon_1"
-            android:layout_alignBottom="@id/qr_icon_1"
             android:gravity="center_vertical"
-            android:text="Ripple" />
+            android:text="Ripple"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/address_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/qr_icon_1"
-            android:layout_alignBottom="@id/qr_icon_1"
-            android:layout_toStartOf="@id/qr_icon_1"
+            android:layout_below="@id/coin_1"
+            android:layout_marginEnd="10dp"
             android:gravity="center_vertical"
-            android:text="r3ADD8kXSUKHd6zTCKfnKV9EZHjzp1S" />
+            android:maxLines="3"
+            android:text="r3ADD8kXSUKHd6zTCKfnKV9EZHjzp1S"
+            android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/qr_icon_1"
@@ -51,6 +51,16 @@
             android:layout_alignParentEnd="true"
             android:layout_marginStart="5dp"
             android:background="@drawable/share_icon" />
+
+        <TextView
+            android:id="@+id/amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/address_1"
+            android:layout_alignStart="@id/address_1"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -69,17 +79,19 @@
             android:layout_alignTop="@id/qr_icon_2"
             android:layout_alignBottom="@id/qr_icon_2"
             android:gravity="center_vertical"
-            android:text="Bitcoin" />
+            android:text="Bitcoin"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/address_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/qr_icon_2"
-            android:layout_alignBottom="@id/qr_icon_2"
-            android:layout_toStartOf="@id/qr_icon_2"
+            android:layout_below="@id/coin_2"
+            android:layout_marginEnd="10dp"
             android:gravity="center_vertical"
-            android:text="1BvBMSEYstWetqTFn5Au4m4GFgNVN2" />
+            android:maxLines="3"
+            android:text="1BvBMSEYstWetqTFn5Au4m4GFgNVN2"
+            android:textSize="15sp" />
 
         <ImageView
             android:id="@+id/qr_icon_2"
@@ -104,19 +116,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/qr_icon_3"
-            android:layout_alignBottom="@id/qr_icon_3"
             android:gravity="center_vertical"
-            android:text="Ether" />
+            android:text="Ether"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/address_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/qr_icon_3"
-            android:layout_alignBottom="@id/qr_icon_3"
-            android:layout_toStartOf="@id/qr_icon_3"
+            android:layout_below="@id/coin_3"
+            android:layout_marginEnd="10dp"
             android:gravity="center_vertical"
-            android:text="0xde0b295669a9fd93d5f28d9ec85e40" />
+            android:maxLines="3"
+            android:text="0xde0b295669a9fd93d5f28d9ec85e40"
+            android:textSize="15sp" />
 
         <ImageView
             android:id="@+id/qr_icon_3"
@@ -148,13 +161,13 @@
             android:id="@+id/radioButton_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="25dp" />
 
         <RadioButton
             android:id="@+id/radioButton_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="35dp" />
 
     </RadioGroup>
 
@@ -165,8 +178,8 @@
         android:layout_marginStart="45dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="65dp"
-        android:minLines="2"
         android:hint="Destination Address"
+        android:minLines="2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/coin_3_holder" />
@@ -188,10 +201,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="8dp"
-        android:hint="Enter Amount To Pay(XRP)"
-        android:text=""
         android:gravity="center"
+        android:hint="Enter Amount To Pay(XRP)"
         android:inputType="numberDecimal"
+        android:text=""
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/dest_add" />
@@ -204,6 +217,7 @@
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
         android:text="PAY"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
