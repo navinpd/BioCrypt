@@ -24,8 +24,10 @@ import android.widget.Toast;
 import com.gemalto.tokenlibrary.pojo.GetAccountInfo;
 import com.gemalto.tokenlibrary.pojo.Subscribe;
 import com.gemalto.tokenlibrary.pojo.TransactionResult;
+import com.gemalto.tokenlibrary.pojo.json.TransactionParameters;
 import com.gemalto.tokenlibrary.restful.APIClient;
 import com.gemalto.tokenlibrary.restful.APIInterface;
+import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
@@ -51,7 +53,7 @@ public class DashBoardActivity extends AppCompatActivity {
     private OkHttpClient client;
     private EditText et_address;
     private WebSocket ws;
-    private static final String XRP_PUBLIC_ADDRESS = "rUCzEr6jrEyMpjhs4wSdQdz4g8Y382NxfM";
+    private static final String XRP_PUBLIC_ADDRESS = null;//"rUCzEr6jrEyMpjhs4wSdQdz4g8Y382NxfM";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,7 +73,6 @@ public class DashBoardActivity extends AppCompatActivity {
                 RadioButton checkedRadioButton = group.findViewById(checkedId);
                 // This puts the value (true/false) into the variable
                 isChecked = checkedRadioButton.isChecked();
-
             }
         });
 
@@ -89,15 +90,16 @@ public class DashBoardActivity extends AppCompatActivity {
                 if (isChecked || payText.getText().toString().length() == 0) {
                     Toast.makeText(DashBoardActivity.this, "Please select your currency OR enter amount.", Toast.LENGTH_SHORT).show();
                 } else {
+                    String destAddress = "rUCzEr6jrEyMpjhs4wSdQdz4g8Y382NxfM";//addressTv.getText().toString();
                     double amount = Double.valueOf(payText.getText().toString());
-
+                    sendTransaction(destAddress, amount);
                     //TODO: On success call for
                 }
             }
         });
 
         getAccountInfo();
-        subscribeForNotification();
+        //subscribeForNotification();
 
     }
 
@@ -198,7 +200,7 @@ public class DashBoardActivity extends AppCompatActivity {
         });
     }
 
-    private void sendTransaction() {
+    private void sendTransaction(String destAddress, double amount) {
         String server_url = null;
         try {
             ApplicationInfo appInfo = getApplicationContext().getPackageManager().getApplicationInfo(getApplicationContext().getPackageName(), PackageManager.GET_META_DATA);
@@ -208,18 +210,26 @@ public class DashBoardActivity extends AppCompatActivity {
             return;
         }
 
+        Gson gson = new Gson();
+        //Prepare json token request
+        String transParamStr = "{\"destinationAddress\":\"" + destAddress
+                + "\",\"amount\":\"" + amount + "\"}";
+        TransactionParameters transParam = gson.fromJson(transParamStr, TransactionParameters.class);
 
         APIInterface apiInterface = APIClient.getClient(server_url).create(APIInterface.class);
         //Call REST API to request token to server
-        Call<TransactionResult> call = apiInterface.sendTransaction();
+        Call<TransactionResult> call = apiInterface.sendTransaction(transParam);
         call.enqueue(new Callback<TransactionResult>() {
             @Override
             public void onResponse(Call<TransactionResult> call, Response<TransactionResult> response) {
                 if (response.body() != null) {
                     Log.i(TAG, "response:" + response.body());
-                    //tvPassPhrase.setText(response.body().getKeytoenglish());
                     String resultcode = response.body().getResultCode();
                     Log.i(TAG, "resultcode:" + resultcode);
+                    if (resultcode.equalsIgnoreCase("tesSUCCESS")) {
+                        Toast.makeText(DashBoardActivity.this, "Transaction successful", Toast.LENGTH_LONG).show();
+                        getAccountInfo();
+                    }
                 } else {
                     Log.i(TAG, "Sth wrong!");
                 }
@@ -227,41 +237,6 @@ public class DashBoardActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<TransactionResult> call, Throwable t) {
-                Log.i(TAG, "onFailure!");
-                call.cancel();
-            }
-        });
-    }
-
-    private void subscribeTransaction() {
-        String server_url = null;
-        try {
-            ApplicationInfo appInfo = getApplicationContext().getPackageManager().getApplicationInfo(getApplicationContext().getPackageName(), PackageManager.GET_META_DATA);
-            server_url = appInfo.metaData.get("SERVER_URL").toString();
-        } catch(PackageManager.NameNotFoundException e){
-            Log.e(TAG, "SERVER_URL NOT found!");
-            return;
-        }
-
-
-        APIInterface apiInterface = APIClient.getClient(server_url).create(APIInterface.class);
-        //Call REST API to request token to server
-        Call<Subscribe> call = apiInterface.subscribe();
-        call.enqueue(new Callback<Subscribe>() {
-            @Override
-            public void onResponse(Call<Subscribe> call, Response<Subscribe> response) {
-                if (response.body() != null) {
-                    Log.i(TAG, "Subscribe result:" + response.body());
-                    //tvPassPhrase.setText(response.body().getKeytoenglish());
-                    double xrpReceived = response.body().getXrp();
-                    Log.i(TAG, "xrpReceived:" + String.valueOf(xrpReceived));
-                } else {
-                    Log.i(TAG, "Sth wrong!");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Subscribe> call, Throwable t) {
                 Log.i(TAG, "onFailure!");
                 call.cancel();
             }
@@ -317,8 +292,6 @@ public class DashBoardActivity extends AppCompatActivity {
                             double amount = (double)transaction.getInt("Amount");
                             Toast.makeText(DashBoardActivity.this,"You've received " + String.valueOf(amount/1000000) + " XRP",Toast.LENGTH_LONG).show();
                         }
-                    } else {
-                        Log.i(TAG, "transaction not null");
                     }
                 } catch (Throwable t) {
                     Log.e("My App", "Could not parse malformed JSON: \"" + msg + "\"");

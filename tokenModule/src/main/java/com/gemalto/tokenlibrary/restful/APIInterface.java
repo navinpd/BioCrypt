@@ -27,9 +27,12 @@ import com.gemalto.tokenlibrary.pojo.GenerateAddress;
 import com.gemalto.tokenlibrary.pojo.GetAccountInfo;
 import com.gemalto.tokenlibrary.pojo.Subscribe;
 import com.gemalto.tokenlibrary.pojo.TransactionResult;
+import com.gemalto.tokenlibrary.pojo.json.TransactionParameters;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 
 public interface APIInterface {
     /**
@@ -42,8 +45,8 @@ public interface APIInterface {
     @GET("/getAccountInfo")
     Call<GetAccountInfo> getAccountInfo();
 
-    @GET("/sendTransaction")
-    Call<TransactionResult> sendTransaction();
+    @POST("/sendTransaction")
+    Call<TransactionResult> sendTransaction(@Body TransactionParameters transaction_param);
 
     @GET("/subscribe")
     Call<Subscribe> subscribe();

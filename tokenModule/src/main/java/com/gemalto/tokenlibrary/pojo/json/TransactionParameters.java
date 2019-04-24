@@ -6,17 +6,28 @@ import com.google.gson.annotations.SerializedName;
 
 public class TransactionParameters {
 
-    @SerializedName("publicaddress")
+    @SerializedName("destinationAddress")
     @Expose
-    private String publicaddress;
+    private String destinationAddress;
 
+    @SerializedName("amount")
+    @Expose
+    private String amount;
 
-    public String getPublicaddress() {
-        return publicaddress;
+    public String getDestinationAddress() {
+        return destinationAddress;
     }
 
-    public void setPublicaddress(String publicaddress) {
-        this.publicaddress = publicaddress;
+    public void setDestinationAddress(String destinationAddress) {
+        this.destinationAddress = destinationAddress;
+    }
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
     }
 
 }

@@ -37,7 +37,8 @@ public class WalletSetupActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ((TextView) findViewById(R.id.pass_phrase))
-                        .setText("Retrieving pass phrase ...");
+                        .setText("Generating pass phrase. Please wait ...");
+                generate_address();
             }
         });
 

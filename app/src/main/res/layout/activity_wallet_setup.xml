@@ -13,7 +13,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="8dp"
-        android:text="Please save below passPhrase for wallet recovery"
+        android:text="Please copy the pass phrase and store in safe place. You can still retrieve your currencies using this in case you lost your card."
         android:textSize="20dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,7 +30,7 @@
         android:background="@drawable/text_view_border"
         android:gravity="center"
         android:padding="7dp"
-        android:text="This is sample pass phrase which will help me to save my wallet keys"
+        android:text="Generating pass phrase. Please wait ..."
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
