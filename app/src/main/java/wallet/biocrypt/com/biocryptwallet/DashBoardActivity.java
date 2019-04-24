@@ -21,6 +21,8 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.gemalto.tokenlibrary.pojo.GetAccountInfo;
+import com.gemalto.tokenlibrary.pojo.Subscribe;
+import com.gemalto.tokenlibrary.pojo.TransactionResult;
 import com.gemalto.tokenlibrary.restful.APIClient;
 import com.gemalto.tokenlibrary.restful.APIInterface;
 
@@ -192,4 +194,73 @@ public class DashBoardActivity extends AppCompatActivity {
         });
     }
 
+    private void sendTransaction() {
+        String server_url = null;
+        try {
+            ApplicationInfo appInfo = getApplicationContext().getPackageManager().getApplicationInfo(getApplicationContext().getPackageName(), PackageManager.GET_META_DATA);
+            server_url = appInfo.metaData.get("SERVER_URL").toString();
+        } catch(PackageManager.NameNotFoundException e){
+            Log.e(TAG, "SERVER_URL NOT found!");
+            return;
+        }
+
+
+        APIInterface apiInterface = APIClient.getClient(server_url).create(APIInterface.class);
+        //Call REST API to request token to server
+        Call<TransactionResult> call = apiInterface.sendTransaction();
+        call.enqueue(new Callback<TransactionResult>() {
+            @Override
+            public void onResponse(Call<TransactionResult> call, Response<TransactionResult> response) {
+                if (response.body() != null) {
+                    Log.i(TAG, "response:" + response.body());
+                    //tvPassPhrase.setText(response.body().getKeytoenglish());
+                    String resultcode = response.body().getResultCode();
+                    Log.i(TAG, "resultcode:" + resultcode);
+                } else {
+                    Log.i(TAG, "Sth wrong!");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TransactionResult> call, Throwable t) {
+                Log.i(TAG, "onFailure!");
+                call.cancel();
+            }
+        });
+    }
+
+    private void subscribeTransaction() {
+        String server_url = null;
+        try {
+            ApplicationInfo appInfo = getApplicationContext().getPackageManager().getApplicationInfo(getApplicationContext().getPackageName(), PackageManager.GET_META_DATA);
+            server_url = appInfo.metaData.get("SERVER_URL").toString();
+        } catch(PackageManager.NameNotFoundException e){
+            Log.e(TAG, "SERVER_URL NOT found!");
+            return;
+        }
+
+
+        APIInterface apiInterface = APIClient.getClient(server_url).create(APIInterface.class);
+        //Call REST API to request token to server
+        Call<Subscribe> call = apiInterface.subscribe();
+        call.enqueue(new Callback<Subscribe>() {
+            @Override
+            public void onResponse(Call<Subscribe> call, Response<Subscribe> response) {
+                if (response.body() != null) {
+                    Log.i(TAG, "response:" + response.body());
+                    //tvPassPhrase.setText(response.body().getKeytoenglish());
+                    double xrpReceived = response.body().getXrp();
+                    Log.i(TAG, "xrpReceived:" + String.valueOf(xrpReceived));
+                } else {
+                    Log.i(TAG, "Sth wrong!");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Subscribe> call, Throwable t) {
+                Log.i(TAG, "onFailure!");
+                call.cancel();
+            }
+        });
+    }
 }

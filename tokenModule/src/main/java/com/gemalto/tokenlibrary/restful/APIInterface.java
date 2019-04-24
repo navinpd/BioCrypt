@@ -25,6 +25,8 @@ package com.gemalto.tokenlibrary.restful;
 
 import com.gemalto.tokenlibrary.pojo.GenerateAddress;
 import com.gemalto.tokenlibrary.pojo.GetAccountInfo;
+import com.gemalto.tokenlibrary.pojo.Subscribe;
+import com.gemalto.tokenlibrary.pojo.TransactionResult;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -39,4 +41,10 @@ public interface APIInterface {
 
     @GET("/getAccountInfo")
     Call<GetAccountInfo> getAccountInfo();
+
+    @GET("/sendTransaction")
+    Call<TransactionResult> sendTransaction();
+
+    @GET("/subscribe")
+    Call<Subscribe> subscribe();
 }
