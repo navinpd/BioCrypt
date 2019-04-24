@@ -74,6 +74,7 @@ public class DashBoardActivity extends AppCompatActivity {
                 } else {
                     double amount = Double.valueOf(payText.getText().toString().substring(1, payText.getText().toString().length()));
 
+                    //TODO: On success call for
                 }
             }
         });
