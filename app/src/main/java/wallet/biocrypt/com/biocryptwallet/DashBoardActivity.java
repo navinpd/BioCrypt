@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gemalto.tokenlibrary.pojo.GetAccountInfo;
@@ -30,10 +31,11 @@ import retrofit2.Response;
 
 public class DashBoardActivity extends AppCompatActivity {
     private static final String TAG = DashBoardActivity.class.getSimpleName();
-	private boolean isChecked;
+    private boolean isChecked;
     private EditText payText;
     private ImageView scanQR;
     private EditText addressTv;
+    private TextView amount;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public class DashBoardActivity extends AppCompatActivity {
         findViewById(R.id.qr_icon_1).setOnClickListener(clickListener);
         findViewById(R.id.qr_icon_2).setOnClickListener(clickListener);
         findViewById(R.id.qr_icon_3).setOnClickListener(clickListener);
+        amount = findViewById(R.id.amount);
         payText = findViewById(R.id.pay_text);
         scanQR = findViewById(R.id.scan_qr);
         addressTv = findViewById(R.id.dest_add);
@@ -69,7 +72,7 @@ public class DashBoardActivity extends AppCompatActivity {
                 if (isChecked || payText.getText().toString().length() == 0) {
                     Toast.makeText(DashBoardActivity.this, "Please select your currency OR enter amount.", Toast.LENGTH_SHORT).show();
                 } else {
-                    double amount = Double.valueOf(payText.getText().toString());
+                    double amount = Double.valueOf(payText.getText().toString().substring(1, payText.getText().toString().length()));
 
                 }
             }
@@ -128,7 +131,7 @@ public class DashBoardActivity extends AppCompatActivity {
             alert.show();
         }
     };
-    
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
@@ -144,24 +147,24 @@ public class DashBoardActivity extends AppCompatActivity {
             }
         }
     }
-    
 
-	@Override
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == -1 && requestCode == 100) {
             String address = data.getStringExtra("SCANNED_RESULT");
             addressTv.setText(address);
-            addressTv.setEnabled(false);
+            addressTv.setFocusable(false);
         }
     }
-    
+
     private void getAccountInfo() {
         String server_url = null;
         try {
             ApplicationInfo appInfo = getApplicationContext().getPackageManager().getApplicationInfo(getApplicationContext().getPackageName(), PackageManager.GET_META_DATA);
             server_url = appInfo.metaData.get("SERVER_URL").toString();
-        } catch(PackageManager.NameNotFoundException e){
+        } catch (PackageManager.NameNotFoundException e) {
             Log.e(TAG, "SERVER_URL NOT found!");
             return;
         }
@@ -177,7 +180,10 @@ public class DashBoardActivity extends AppCompatActivity {
                     Log.i(TAG, "response:" + response.body());
                     //tvPassPhrase.setText(response.body().getKeytoenglish());
                     String xrpbalance = response.body().getXrpBalance();
+                    amount.setText(xrpbalance);
+                    amount.setVisibility(View.VISIBLE);
                     String publicaddress = response.body().getPublicaddress();
+                    ((TextView) findViewById(R.id.address_1)).setText(publicaddress);
                     Log.i(TAG, "publicaddress:" + publicaddress + "xrpbalance:" + xrpbalance);
                 } else {
                     Log.i(TAG, "Sth wrong!");
