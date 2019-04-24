@@ -27,9 +27,18 @@ import com.gemalto.tokenlibrary.pojo.TransactionResult;
 import com.gemalto.tokenlibrary.restful.APIClient;
 import com.gemalto.tokenlibrary.restful.APIInterface;
 
+import org.json.JSONObject;
+
+import java.text.ParseException;
+
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import okhttp3.Request;
+import okhttp3.WebSocket;
+import okhttp3.WebSocketListener;
+import okio.ByteString;
 
 public class DashBoardActivity extends AppCompatActivity {
     private static final String TAG = DashBoardActivity.class.getSimpleName();
@@ -39,6 +48,10 @@ public class DashBoardActivity extends AppCompatActivity {
     private EditText addressTv;
     private TextView amount;
     Thread backgroundThread;
+    private OkHttpClient client;
+    private EditText et_address;
+    private WebSocket ws;
+    private static final String XRP_PUBLIC_ADDRESS = "rUCzEr6jrEyMpjhs4wSdQdz4g8Y382NxfM";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,6 +64,7 @@ public class DashBoardActivity extends AppCompatActivity {
         payText = findViewById(R.id.pay_text);
         scanQR = findViewById(R.id.scan_qr);
         addressTv = findViewById(R.id.dest_add);
+        client = new OkHttpClient();
         ((RadioGroup) findViewById(R.id.radio_group).findViewById(R.id.radio_group)).setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // This will get the radiobutton that has changed in its check state
@@ -83,7 +97,7 @@ public class DashBoardActivity extends AppCompatActivity {
         });
 
         getAccountInfo();
-        subscribeTransaction();
+        subscribeForNotification();
 
     }
 
@@ -219,20 +233,6 @@ public class DashBoardActivity extends AppCompatActivity {
         });
     }
 
-    private void subscribeForNotification() {
-        backgroundThread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    subscribeTransaction();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        backgroundThread.start();
-    }
     private void subscribeTransaction() {
         String server_url = null;
         try {
@@ -264,6 +264,65 @@ public class DashBoardActivity extends AppCompatActivity {
             public void onFailure(Call<Subscribe> call, Throwable t) {
                 Log.i(TAG, "onFailure!");
                 call.cancel();
+            }
+        });
+    }
+
+    private void subscribeForNotification() {
+        Request request = new Request.Builder().url("wss://s.altnet.rippletest.net:51233").build();
+        EchoWebSocketListener listener = new EchoWebSocketListener();
+        ws = client.newWebSocket(request, listener);
+        String msg = "{ \"id\": 1, \"command\": \"subscribe\", \"accounts\": [\"rUCzEr6jrEyMpjhs4wSdQdz4g8Y382NxfM\"], \"streams\": [ \"transactions\"] }";
+        ws.send(msg);
+    }
+
+    private final class EchoWebSocketListener extends WebSocketListener {
+        private static final int NORMAL_CLOSURE_STATUS = 1000;
+
+        //@Override
+        public void onOpen(WebSocket webSocket, Response response) {
+            Log.i(TAG, "onOpen : " );
+        }
+        @Override
+        public void onMessage(WebSocket webSocket, String text) {
+            Log.i(TAG, "Receiving : " + text);
+            processMsg(text);
+        }
+        @Override
+        public void onMessage(WebSocket webSocket, ByteString bytes) {
+            Log.i(TAG, "Receiving bytes : " + bytes.hex());
+        }
+        @Override
+        public void onClosing(WebSocket webSocket, int code, String reason) {
+            webSocket.close(NORMAL_CLOSURE_STATUS, null);
+            Log.i(TAG, "Closing : " + code + " / " + reason);
+        }
+        //@Override
+        public void onFailure(WebSocket webSocket, Throwable t, Response response) {
+            Log.i(TAG, "Error : " + t.getMessage());
+        }
+    }
+
+    private void processMsg(final String msg) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    JSONObject obj = new JSONObject(msg);
+                    JSONObject transaction = obj.getJSONObject("transaction");
+                    if (transaction != null) {
+                        String trx_type = transaction.getString("TransactionType");
+                        String account = transaction.getString("Destination");
+                        if (account.equalsIgnoreCase(XRP_PUBLIC_ADDRESS) && trx_type.equalsIgnoreCase("Payment")){
+                            double amount = (double)transaction.getInt("Amount");
+                            Toast.makeText(DashBoardActivity.this,"You've received " + String.valueOf(amount/1000000) + " XRP",Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Log.i(TAG, "transaction not null");
+                    }
+                } catch (Throwable t) {
+                    Log.e("My App", "Could not parse malformed JSON: \"" + msg + "\"");
+                }
             }
         });
     }
