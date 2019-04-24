@@ -7,13 +7,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Toast;
 
 public class DashBoardActivity extends AppCompatActivity {
-    private boolean isChecked;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,27 +16,8 @@ public class DashBoardActivity extends AppCompatActivity {
         findViewById(R.id.qr_icon_1).setOnClickListener(clickListener);
         findViewById(R.id.qr_icon_2).setOnClickListener(clickListener);
         findViewById(R.id.qr_icon_3).setOnClickListener(clickListener);
-        ((RadioGroup) findViewById(R.id.radio_group).findViewById(R.id.radio_group)).setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
-            public void onCheckedChanged(RadioGroup group, int checkedId)
-            {
-                // This will get the radiobutton that has changed in its check state
-                RadioButton checkedRadioButton = group.findViewById(checkedId);
-                // This puts the value (true/false) into the variable
-                isChecked = checkedRadioButton.isChecked();
 
-            }
-        });
-        findViewById(R.id.pay_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(isChecked) {
-                    Toast.makeText(DashBoardActivity.this, "Please select your currency first.", Toast.LENGTH_SHORT).show();
-                } else {
 
-                }
-            }
-        });
 
     }
 
