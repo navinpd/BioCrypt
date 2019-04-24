@@ -72,33 +72,13 @@ public class DashBoardActivity extends AppCompatActivity {
                 if (isChecked || payText.getText().toString().length() == 0) {
                     Toast.makeText(DashBoardActivity.this, "Please select your currency OR enter amount.", Toast.LENGTH_SHORT).show();
                 } else {
-                    double amount = Double.valueOf(payText.getText().toString().substring(1, payText.getText().toString().length()));
+                    double amount = Double.valueOf(payText.getText().toString());
 
                     //TODO: On success call for
                 }
             }
         });
 
-        payText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (charSequence.length() > 0 && !charSequence.toString().equals("$") &&
-                        !charSequence.toString().startsWith("$")) {
-                    payText.setText("$" + charSequence);
-                    payText.setSelection(charSequence.length() + 1);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
         getAccountInfo();
     }
 
