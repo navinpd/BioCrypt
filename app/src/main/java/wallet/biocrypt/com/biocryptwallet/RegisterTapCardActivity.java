@@ -30,7 +30,8 @@ public class RegisterTapCardActivity extends AppCompatActivity {
         findViewById(R.id.success_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(RegisterTapCardActivity.this, DashBoardActivity.class));
+                startActivity(new Intent(RegisterTapCardActivity.this, WalletSetupActivity.class));
+                finish();
             }
         });
     }

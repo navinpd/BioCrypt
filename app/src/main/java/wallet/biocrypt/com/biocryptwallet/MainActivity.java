@@ -33,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (text1.getText().toString().equals(text2.getText().toString())) {
                     preferences.edit().putBoolean(val, true).apply();
-                    startActivity(new Intent(MainActivity.this, WalletSetupActivity.class));
+                    startActivity(new Intent(MainActivity.this, RegisterTapCardActivity.class));
+                    finish();
                 } else {
                     Toast.makeText(MainActivity.this, "PIN did not match", Toast.LENGTH_SHORT).show();
                 }

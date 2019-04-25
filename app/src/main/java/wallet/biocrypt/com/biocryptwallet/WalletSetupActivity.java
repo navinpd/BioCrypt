@@ -45,7 +45,7 @@ public class WalletSetupActivity extends AppCompatActivity {
         findViewById(R.id.proceed).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(WalletSetupActivity.this, RegisterTapCardActivity.class));
+                startActivity(new Intent(WalletSetupActivity.this, DashBoardActivity.class));
             }
         });
 
