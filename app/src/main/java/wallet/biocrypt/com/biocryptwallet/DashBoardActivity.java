@@ -84,6 +84,13 @@ public class DashBoardActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.refresh).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getAccountInfo();
+            }
+        });
+
         findViewById(R.id.pay_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -177,16 +184,22 @@ public class DashBoardActivity extends AppCompatActivity {
         Call<GetAccountInfo> call = apiInterface.getAccountInfo();
         call.enqueue(new Callback<GetAccountInfo>() {
             @Override
-            public void onResponse(Call<GetAccountInfo> call, Response<GetAccountInfo> response) {
+            public void onResponse(Call<GetAccountInfo> call,final Response<GetAccountInfo> response) {
                 if (response.body() != null) {
                     Log.i(TAG, "response:" + response.body());
-                    //tvPassPhrase.setText(response.body().getKeytoenglish());
-                    String xrpbalance = response.body().getXrpBalance();
-                    amount.setText(xrpbalance);
-                    amount.setVisibility(View.VISIBLE);
-                    String publicaddress = response.body().getPublicaddress();
-                    ((TextView) findViewById(R.id.address_1)).setText(publicaddress);
-                    Log.i(TAG, "publicaddress:" + publicaddress + "xrpbalance:" + xrpbalance);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            //tvPassPhrase.setText(response.body().getKeytoenglish());
+                            String xrpbalance = response.body().getXrpBalance();
+                            amount.setText("XRP: "+xrpbalance);
+                            amount.setVisibility(View.VISIBLE);
+                            String publicaddress = response.body().getPublicaddress();
+                            ((TextView) findViewById(R.id.address_1)).setText(publicaddress);
+                            Log.i(TAG, "publicaddress:" + publicaddress + "xrpbalance:" + xrpbalance);
+                        }
+                    });
                 } else {
                     Log.i(TAG, "Sth wrong!");
                 }
@@ -228,7 +241,7 @@ public class DashBoardActivity extends AppCompatActivity {
                     Log.i(TAG, "resultcode:" + resultcode);
                     if (resultcode.equalsIgnoreCase("tesSUCCESS")) {
                         Toast.makeText(DashBoardActivity.this, "Transaction successful", Toast.LENGTH_LONG).show();
-                        getAccountInfo();
+//                        getAccountInfo();
                     }
                 } else {
                     Log.i(TAG, "Sth wrong!");

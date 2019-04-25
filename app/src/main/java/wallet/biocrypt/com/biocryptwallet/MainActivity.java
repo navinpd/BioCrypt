@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         final EditText text1 = findViewById(R.id.enter_pin);
         final EditText text2 = findViewById(R.id.enter_pin_two);
         if (isSubsequentLaunch) {
-            startActivity(new Intent(MainActivity.this, DashBoardActivity.class));
+            startActivity(new Intent(MainActivity.this, WalletSetupActivity.class));
             finish();
         }
 
