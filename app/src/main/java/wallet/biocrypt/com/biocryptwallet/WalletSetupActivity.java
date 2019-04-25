@@ -83,4 +83,36 @@ public class WalletSetupActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void recover_wallet() {
+        String server_url = null;
+        try {
+            ApplicationInfo appInfo = getApplicationContext().getPackageManager().getApplicationInfo(getApplicationContext().getPackageName(), PackageManager.GET_META_DATA);
+            server_url = appInfo.metaData.get("SERVER_URL").toString();
+        } catch(PackageManager.NameNotFoundException e){
+            Log.e(TAG, "SERVER_URL NOT found!");
+            return;
+        }
+
+        APIInterface apiInterface = APIClient.getClient(server_url).create(APIInterface.class);
+        //Call REST API to request token to server
+        Call<GenerateAddress> call = apiInterface.generateAddress();
+        call.enqueue(new Callback<GenerateAddress>() {
+            @Override
+            public void onResponse(Call<GenerateAddress> call, Response<GenerateAddress> response) {
+                if (response.body() != null) {
+                    Log.i(TAG, "response:" + response.body());
+                    tvPassPhrase.setText(response.body().getKeytoenglish());
+                } else {
+                    Log.i(TAG, "Sth wrong!");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GenerateAddress> call, Throwable t) {
+                Log.i(TAG, "onFailure!");
+                call.cancel();
+            }
+        });
+    }
 }

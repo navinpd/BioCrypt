@@ -50,4 +50,7 @@ public interface APIInterface {
 
     @GET("/subscribe")
     Call<Subscribe> subscribe();
+
+    @POST("/recoverWallet")
+    Call<TransactionResult> recoverWallet(@Body TransactionParameters transaction_param);
 }
